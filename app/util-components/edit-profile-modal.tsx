@@ -1,27 +1,19 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
 	DialogDescription,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Ico from "@/app/util-components/ico";
 import { useEffect, useState } from "react";
 import {
 	getAuthenticatedUserProfile,
-	uploadPhotoAction,
 } from "../server-actions/pfractions";
-import PhotoUplaoderForm from "./photo-uploader-modal-shadbuilder";
 import EditProfileForm from "./edit-profile-form";
-import { set } from "date-fns";
 
 export function EditProfileModal() {
 	const [open, setOpen] = useState(false);
@@ -81,7 +73,7 @@ export function EditProfileModal() {
 					</div>
 				</div>
 			</DialogTrigger>
-			<DialogContent className="sm:max-w-[80vw] sm:max-h-[90vh] overflow-auto">
+			<DialogContent className="sm:max-w-[70vw] sm:max-h-[90vh] overflow-auto bg-black/10 backdrop-blur-3xl backdrop-brightness-80 rounded-3xl">
 				<DialogHeader className=" mb-5">
 					<DialogTitle className="">Edit Profile</DialogTitle>
 					<DialogDescription className="">

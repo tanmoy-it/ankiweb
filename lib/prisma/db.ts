@@ -1,28 +1,8 @@
-import { PrismaClient } from '../generated/prisma'
+import { PrismaClient } from "@/lib/generated/prisma";
 
-const globalForPrisma = globalThis as unknown as {
-    prisma: PrismaClient | undefined
-}
+const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 export const db =
-    globalForPrisma.prisma ??
-    new PrismaClient({
-        log: process.env.NODE_ENV === 'development' ? ['query'] : ['error'],
-        // Remove datasources - this should be handled by your schema.prisma
-    })
+  globalForPrisma.prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = db
-}
-
-// Better shutdown handling
-if (process.env.NODE_ENV === 'production') {
-    const gracefulShutdown = async () => {
-        await db.$disconnect()
-        process.exit(0)
-    }
-    
-    process.on('SIGINT', gracefulShutdown)
-    process.on('SIGTERM', gracefulShutdown)
-    process.on('beforeExit', gracefulShutdown)
-}
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;

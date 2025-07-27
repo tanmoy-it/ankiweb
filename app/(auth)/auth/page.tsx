@@ -1,6 +1,5 @@
 "use client";
 import { signIn, signUp } from "@/lib/auth-client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, MouseEvent, FC } from "react";
 
@@ -23,7 +22,7 @@ const MartianLogin: FC = () => {
 			},
 			{
 				//callbacks
-				onSuccess: (data) => {
+				onSuccess: () => {
 					setLoading(false);
 					router.replace("/");
 				},
@@ -60,7 +59,7 @@ const MartianLogin: FC = () => {
 					console.log("Sign up request initiated:", ctx);
 					setError(""); // clear any previous error
 				},
-				onSuccess: (ctx) => {
+				onSuccess: () => {
 					// handle successful sign up
 					setLoading(false);
 

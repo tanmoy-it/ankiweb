@@ -1,6 +1,6 @@
 "use client";
 import Ico from "@/app/util-components/ico";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Player = "X" | "O";

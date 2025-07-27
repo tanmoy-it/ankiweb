@@ -2,10 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { z } from "zod";
 import Ico from "../util-components/ico";
 import { AnimatePresence, motion } from "motion/react";
-import Script from "next/script";
 
 export default function SearchPanel({
 	entities,
@@ -14,8 +12,10 @@ export default function SearchPanel({
 	label,
 	disabled = false,
 }: {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	entities?: any[];
 	entitiesLoading?: boolean;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	setActiveEntity?: any;
 	label?: string;
 	disabled?: boolean;
@@ -30,7 +30,9 @@ export default function SearchPanel({
 			className={`flex flex-col gap-1 w-full ${disabled ? " opacity-50 pointer-events-none cursor-not-allowed" : ""}`}
 		>
 			{label && (
-				<h1 className="text-lg text-dune-100/60 tracking-[calc(1.9rem)] uppercase text-center">{label}</h1>
+				<h1 className="text-lg text-dune-100/60 tracking-[calc(1.9rem)] uppercase text-center">
+					{label}
+				</h1>
 			)}
 			<Input
 				type={"text"}
@@ -51,7 +53,7 @@ export default function SearchPanel({
 					loading ...
 				</div>
 			) : (
-				<div className="w-full flex gap-1 flex-wrap bg-black/20 p-1.5 rounded-xl overflow-y-auto max-h-full overflow-hidden">
+				<div className="w-full flex gap-1 flex-wrap bg-dune-900/30 p-2 rounded-xl overflow-y-auto max-h-full overflow-hidden">
 					<AnimatePresence>
 						{(!entities || entities.length === 0) && (
 							<div className="w-full p-2 bg-dune-900/50 rounded-lg text-sm text-center">
@@ -106,8 +108,9 @@ export default function SearchPanel({
 											transition: { duration: 0.1 },
 										}}
 										onClick={() => {
-											setActiveEntity &&
+											if (setActiveEntity) {
 												setActiveEntity(entity);
+											}
 										}}
 										className="w-max max-w-full p-1 bg-dune-900/50 px-2 rounded-lg text-md text-wrap cursor-pointer hover:scale-105 transition-all"
 										key={entity.id}

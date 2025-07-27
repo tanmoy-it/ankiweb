@@ -119,6 +119,7 @@ const CountrySelect = ({
 				<Command className={""}>
 					<CommandInput className={""}
 						value={searchValue}
+						// eslint-disable-next-line
 						onValueChange={(value: any) => {
 							setSearchValue(value);
 							setTimeout(() => {

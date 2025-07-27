@@ -1,5 +1,5 @@
 "use client";
-import { useState, useActionState, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -68,9 +68,14 @@ interface EditProfileFormProps {
 	};
 }
 
-export default function EditProfileForm({ defaultValues }: EditProfileFormProps) {
-	const [state, formAction, isPending] = useActionState(updateProfileAction, null);
-	
+export default function EditProfileForm({
+	defaultValues,
+}: EditProfileFormProps) {
+	const [state, formAction, isPending] = useActionState(
+		updateProfileAction,
+		null
+	);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: defaultValues || {
@@ -107,16 +112,13 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 
 	return (
 		<Form {...form}>
-			<form
-				action={formAction}
-				className="space-y-8 max-w-full mx-auto"
-			>
+			<form action={formAction} className="space-y-8 max-w-full mx-auto">
 				{state?.error && (
 					<div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
 						{state.error}
 					</div>
 				)}
-				
+
 				{state?.success && (
 					<div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4">
 						{state.message}
@@ -128,6 +130,7 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="first_name"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
@@ -135,7 +138,7 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 									</FormLabel>
 									<FormControl>
 										<Input
-                                        className={""}
+											className={""}
 											placeholder=""
 											type="text"
 											name="first_name"
@@ -154,6 +157,7 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="last_name"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
@@ -161,7 +165,7 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 									</FormLabel>
 									<FormControl>
 										<Input
-                                        className={""}
+											className={""}
 											placeholder=""
 											type="text"
 											name="last_name"
@@ -180,13 +184,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="display_name"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
 										Display Name
 									</FormLabel>
 									<FormControl>
-										<Input className={""}
+										<Input
+											className={""}
 											placeholder=""
 											type="text"
 											name="display_name"
@@ -205,6 +211,7 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 				<FormField
 					control={form.control}
 					name="user_bio"
+					// eslint-disable-next-line
 					render={({ field }: { field: any }) => (
 						<FormItem className={""}>
 							<FormLabel className={""}>Bio</FormLabel>
@@ -230,15 +237,20 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="date_of_birth"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className="flex flex-col">
 									<FormLabel className={""}>
 										Date of birth
 									</FormLabel>
-									<input 
-										type="hidden" 
-										name="date_of_birth" 
-										value={field.value ? field.value.toISOString() : ""} 
+									<input
+										type="hidden"
+										name="date_of_birth"
+										value={
+											field.value
+												? field.value.toISOString()
+												: ""
+										}
 									/>
 									<Popover>
 										<PopoverTrigger asChild>
@@ -292,10 +304,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="gender"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={"w-full"}>
 									<FormLabel className={""}>Gender</FormLabel>
-									<input type="hidden" name="gender" value={field.value || ""} />
+									<input
+										type="hidden"
+										name="gender"
+										value={field.value || ""}
+									/>
 									<Select
 										onValueChange={field.onChange}
 										value={field.value}
@@ -339,12 +356,17 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="phone"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className="flex flex-col items-start">
 									<FormLabel className={""}>
 										Phone number
 									</FormLabel>
-									<input type="hidden" name="phone" value={field.value || ""} />
+									<input
+										type="hidden"
+										name="phone"
+										value={field.value || ""}
+									/>
 									<FormControl className="w-full">
 										<PhoneInput
 											placeholder=""
@@ -364,13 +386,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="location"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
 										Location
 									</FormLabel>
 									<FormControl>
-										<Input className={""}
+										<Input
+											className={""}
 											placeholder=""
 											type="text"
 											name="location"
@@ -389,13 +413,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="website"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
 										Website
 									</FormLabel>
 									<FormControl>
-										<Input className={""}
+										<Input
+											className={""}
 											placeholder=""
 											type="text"
 											name="website"
@@ -416,13 +442,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="profession"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
 										Profession
 									</FormLabel>
 									<FormControl>
-										<Input className={""}
+										<Input
+											className={""}
 											placeholder=""
 											type="text"
 											name="profession"
@@ -441,13 +469,15 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 						<FormField
 							control={form.control}
 							name="current_company_name"
+							// eslint-disable-next-line
 							render={({ field }: { field: any }) => (
 								<FormItem className={""}>
 									<FormLabel className={""}>
 										Current Company Name
 									</FormLabel>
 									<FormControl>
-										<Input className={""}
+										<Input
+											className={""}
 											placeholder=""
 											type="text"
 											name="current_company_name"
@@ -466,15 +496,17 @@ export default function EditProfileForm({ defaultValues }: EditProfileFormProps)
 				<FormField
 					control={form.control}
 					name="latest_education_degree"
+					// eslint-disable-next-line
 					render={({ field }: { field: any }) => (
 						<FormItem className={""}>
 							<FormLabel className={""}>
 								Latest Education Degree
 							</FormLabel>
 							<FormControl>
-								<Input  className={""}
-									placeholder="" 
-									type="text" 
+								<Input
+									className={""}
+									placeholder=""
+									type="text"
 									name="latest_education_degree"
 									defaultValue={field.value}
 									onChange={field.onChange}

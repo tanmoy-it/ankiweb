@@ -1,20 +1,16 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
 import Ico from "../../util-components/ico";
 import { useEffect, useState } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify-icon/react";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -27,11 +23,8 @@ import {
 	getAllRoles,
 	updateRole,
 } from "../access-control-actions";
-
-export const formSchema = z.object({
-	name: z.string().min(1),
-	description: z.string().min(1),
-});
+import { DeckFieldDefinition } from "@/lib/generated/prisma";
+import { formSchema } from "../types";
 
 type responseType = {
 	name: string;
@@ -65,10 +58,10 @@ export default function AccessControlPage() {
 			}
 			toast.success("Role deleted successfully!");
 			fetchRoles();
-		} catch (error: any) {
+		} catch (error: Error | unknown) {
 			console.error("Failed to delete role", error);
 			toast.error(
-				error.message || "Failed to delete role. Please try again."
+				(error as Error).message || "Failed to delete role. Please try again."
 			);
 		} finally {
 			setPendingDelete(false);
@@ -130,7 +123,7 @@ export default function AccessControlPage() {
 					className="invert"
 				/>
 			</h2>
-			<div className="w-full p-2 bg-dune-950/30 rounded-xl mt-3 shadow-xl shadow-black/20">
+			<div className="w-full p-2 bg-dune-950/10 border-2 border-white/5 rounded-xl mt-3 shadow-xl shadow-black/20">
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
@@ -141,13 +134,14 @@ export default function AccessControlPage() {
 								<FormField
 									control={form.control}
 									name="name"
-									render={({ field }: { field: any }) => (
+									render={({ field }: { field: DeckFieldDefinition }) => (
 										<FormItem className={""}>
 											<FormLabel className={""}>
 												Role Name
 											</FormLabel>
 											<FormControl>
 												<Input
+													className={""}
 													placeholder="Admin"
 													type="text"
 													{...field}
@@ -164,13 +158,14 @@ export default function AccessControlPage() {
 								<FormField
 									control={form.control}
 									name="description"
-									render={({ field }: { field: any }) => (
+									render={({ field }: { field: DeckFieldDefinition }) => (
 										<FormItem className={""}>
 											<FormLabel className={""}>
 												Role Description
 											</FormLabel>
 											<FormControl>
 												<Input
+													className={""}
 													placeholder="Admin of the system"
 													type="text"
 													{...field}
@@ -187,8 +182,8 @@ export default function AccessControlPage() {
 							{editingRole && (
 								<Button
 									size={"default"}
-									className={"cursor-pointer"}
-									variant="destructive"
+									className={"cursor-pointer bg-warning-500 hover:bg-warning-600 text-warning-50"}
+									variant="default"
 									type="button"
 									onClick={() => {
 										setEditingRole(null);
@@ -225,7 +220,7 @@ export default function AccessControlPage() {
 				</Form>
 			</div>
 			<h2 className="text-lg font-semibold mt-3 text-dune-200">Roles</h2>
-			<div className="w-full p-2 bg-dune-950/30 rounded-xl mt-1 grid grid-cols-4 gap-2 shadow-xl shadow-black/20">
+			<div className="w-full p-2 bg-dune-950/10 border-2 border-white/5 rounded-xl mt-1 grid grid-cols-4 gap-2 shadow-xl shadow-black/20">
 				{rolesLoading ? (
 					<span className="text-md text-white text-center col-span-3">
 						<Ico
@@ -275,7 +270,7 @@ export default function AccessControlPage() {
 											variant={"outline"}
 											size={"sm"}
 											disabled={pendingDelete}
-											onClick={(e: any) => {
+											onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 												e.preventDefault();
 												setEditingRole(role);
 												form.setValue(

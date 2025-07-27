@@ -5,22 +5,27 @@ import SearchPanel from "../search-panel";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import {
-	getAllPermissions,
 	getAllPermissionsForRole,
 	getAllRoles,
 	bindThisPermissionToRole,
 	unbindThisPermissionFromRole,
 } from "../access-control-actions";
 import { toast } from "sonner";
+import { Permission, Role } from "@/lib/generated/prisma";
 
 export default function RoleAccessBindingPage() {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [roles, setRoles] = useState<any[] | undefined>([]);
 	const [rolesLoading, setRoleLoading] = useState(false);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [bindingRole, setBindingRole] = useState<any>(null);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [bindingPermission, setBindingPermission] = useState<any>(null);
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [boundPermissions, setBoundPermissions] = useState<any[]>([]);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [unboundPermissions, setUnboundPermissions] = useState<any[]>([]);
 
 	const [boundFilter, setBoundFilter] = useState("");
@@ -41,7 +46,7 @@ export default function RoleAccessBindingPage() {
 		}
 	}
 
-	function setActiveRole(role: any) {
+	function setActiveRole(role: Role) {
 		setBindingPermission(null);
 		setBindingRole(role);
 	}
@@ -50,30 +55,15 @@ export default function RoleAccessBindingPage() {
 		fetchRoles();
 	}, []);
 
-	async function getPermissionsForRole() {
-		if (!bindingRole) return;
-		setLoadingBinder(true);
-		const result = await getAllPermissionsForRole(bindingRole.id);
-		if (result.success) {
-			console.log("Bound Permissions:", result.boundPermissions);
-			console.log("Unbound Permissions:", result.unboundPermissions);
-			setBoundPermissions(result.boundPermissions ?? []);
-			setUnboundPermissions(result.unboundPermissions ?? []);
-		} else {
-			toast.error("couldn't find permissions for this role");
-		}
-		setLoadingBinder(false);
-	}
-
-	async function bindPermissionToRole(permission: any) {
+	async function bindPermissionToRole(permission: Permission) {
 		if (!bindingRole || !permission) return;
 		try {
 			setLoadingBinder(true);
-			const resopnse = await bindThisPermissionToRole(
+			const response = await bindThisPermissionToRole(
 				bindingRole.id,
 				permission.id
 			);
-			if (resopnse.success) {
+			if (response.success) {
 				toast.success("Permission bound to role successfully!");
 				setBoundPermissions((prev) => [...prev, permission]);
 				setUnboundPermissions((prev) =>
@@ -89,7 +79,7 @@ export default function RoleAccessBindingPage() {
 			setLoadingBinder(false);
 		}
 	}
-	async function unbindPermissionFromRole(permission: any) {
+	async function unbindPermissionFromRole(permission: Permission) {
 		if (!bindingRole || !permission) return;
 		try {
 			setLoadingBinder(true);
@@ -115,6 +105,20 @@ export default function RoleAccessBindingPage() {
 	}
 
 	useEffect(() => {
+		async function getPermissionsForRole() {
+			if (!bindingRole) return;
+			setLoadingBinder(true);
+			const result = await getAllPermissionsForRole(bindingRole.id);
+			if (result.success) {
+				console.log("Bound Permissions:", result.boundPermissions);
+				console.log("Unbound Permissions:", result.unboundPermissions);
+				setBoundPermissions(result.boundPermissions ?? []);
+				setUnboundPermissions(result.unboundPermissions ?? []);
+			} else {
+				toast.error("couldn't find permissions for this role");
+			}
+			setLoadingBinder(false);
+		}
 		if (bindingRole && !bindingPermission) {
 			getPermissionsForRole();
 		}
@@ -131,7 +135,7 @@ export default function RoleAccessBindingPage() {
 			</h1>
 
 			<div className="grid grid-cols-5 gap-1 mt-3 h-[80vh]">
-				<div className="p-3 bg-dune-950/30 rounded-2xl shadow-xl shadow-black/50">
+				<div className="p-3 bg-dune-950/10 border-2 border-white/5 rounded-2xl shadow-xl shadow-black/50">
 					<SearchPanel
 						entities={roles}
 						entitiesLoading={rolesLoading}
@@ -140,7 +144,7 @@ export default function RoleAccessBindingPage() {
 					/>
 				</div>
 				<div
-					className={`p-3 bg-dune-950/30 col-span-4 shadow-xl shadow-black/50 rounded-2xl ${!loadingBinder ? "" : "opacity-50 pointer-events-none cursor-not-allowed"} relative`}
+					className={`p-3 bg-dune-950/10 border-2 border-white/5 col-span-4 shadow-xl shadow-black/50 rounded-2xl ${!loadingBinder ? "" : "opacity-50 pointer-events-none cursor-not-allowed"} relative`}
 				>
 					{/* a spinner */}
 					{loadingBinder && (
@@ -238,7 +242,7 @@ export default function RoleAccessBindingPage() {
 									<div className="p-3 rounded-lg flex flex-col gap-2 bg-black/15">
 										<div className="flex justify-between items-center">
 											<h3 className="text-lg font-semibold tracking-wide text-dune-100/40">
-												Un-Bound Permissions (Can't)
+												Un-Bound Permissions {"(Can't)"}
 												<p className="text-xs text-dune-100/10">
 													(click to bind permission to
 													the role)

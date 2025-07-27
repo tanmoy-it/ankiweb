@@ -1,8 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { formSchema } from "./roles/page";
 import { db } from "@/lib/prisma/db";
+import { formSchema } from "./types";
 
 // role CRUD
 export async function addNewRole(values: z.infer<typeof formSchema>) {
@@ -232,8 +232,8 @@ export async function getAllPermissionsForRole(roleID: string) {
 			boundPermissions: boundPermissions,
 			unboundPermissions: unboundPermissions,
 		};
-	} catch (error: any) {
-		console.error(error.message);
+	} catch (error: Error | unknown) {
+		console.error((error as Error).message);
 		return {
 			success: false,
 			error: error,

@@ -1,18 +1,15 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
 import Ico from "../../util-components/ico";
 import { useEffect, useState } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -26,11 +23,8 @@ import {
 	updatePermission,
 } from "../access-control-actions";
 import { motion } from "motion/react";
-
-export const formSchema = z.object({
-	name: z.string().min(1),
-	description: z.string().min(1),
-});
+import { DeckFieldDefinition } from "@/lib/generated/prisma";
+import { formSchema } from "../types";
 
 type responseType = {
 	name: string;
@@ -65,10 +59,10 @@ export default function PermissionsPage() {
 			}
 			toast.success("Permission deleted successfully!");
 			fetchPermissions();
-		} catch (error: any) {
+		} catch (error: Error | unknown) {
 			console.error("Failed to delete permission", error);
 			toast.error(
-				error.message ||
+				(error as Error).message ||
 					"Failed to delete permission. Please try again."
 			);
 		} finally {
@@ -133,7 +127,7 @@ export default function PermissionsPage() {
 					className="invert"
 				/>
 			</h1>
-			<div className="w-full p-2 bg-dune-950/30 rounded-xl mt-3 shadow-xl shadow-black/20">
+			<div className="w-full p-2 bg-dune-950/10 border-2 border-white/5 rounded-xl mt-3 shadow-xl shadow-black/20">
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
@@ -144,13 +138,14 @@ export default function PermissionsPage() {
 								<FormField
 									control={form.control}
 									name="name"
-									render={({ field }: { field: any }) => (
+									render={({ field }: { field: DeckFieldDefinition }) => (
 										<FormItem className={""}>
 											<FormLabel className={""}>
 												Name
 											</FormLabel>
 											<FormControl>
 												<Input
+												className={""}
 													placeholder="create_posts"
 													type="text"
 													{...field}
@@ -167,13 +162,14 @@ export default function PermissionsPage() {
 								<FormField
 									control={form.control}
 									name="description"
-									render={({ field }: { field: any }) => (
+									render={({ field }: { field: DeckFieldDefinition }) => (
 										<FormItem className={""}>
 											<FormLabel className={""}>
 												Description
 											</FormLabel>
 											<FormControl>
 												<Input
+												className={""}
 													placeholder="Allows user to create new posts"
 													type="text"
 													{...field}
@@ -232,7 +228,7 @@ export default function PermissionsPage() {
 				</Form>
 			</div>
 			<h2 className="text-lg font-semibold mt-3">Permissions</h2>
-			<div className="w-full p-2 bg-dune-950/30 rounded-xl mt-1 grid grid-cols-4 gap-2 shadow-xl shadow-black/20">
+			<div className="w-full p-2 bg-dune-950/10 border-2 border-white/5 rounded-xl mt-1 grid grid-cols-4 gap-2 shadow-xl shadow-black/20">
 				{permissionsLoading ? (
 					<span className="text-md text-white text-center col-span-3">
 						<Ico
@@ -283,7 +279,7 @@ export default function PermissionsPage() {
 											variant={"outline"}
 											size={"sm"}
 											disabled={pendingDelete}
-											onClick={(e: any) => {
+											onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
 												e.preventDefault();
 												setEditingPermission(
 													permission

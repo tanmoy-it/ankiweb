@@ -1,8 +1,9 @@
 // This is your Prisma schema file,
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../lib/generated/prisma"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -23,7 +24,9 @@ model User {
   posts         Post[]
   roles         UserRole[]
 
-  profile Profile?
+  profile      Profile?
+  Deck         Deck[]
+  StudySession StudySession[]
 
   @@unique([email])
   @@map("user")
@@ -162,4 +165,127 @@ model RolePermission {
 
   @@unique([roleId, permissionId])
   @@map("role_permission")
+}
+
+model Deck {
+  id          String   @id @default(cuid())
+  name        String
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  fieldDefinitions DeckFieldDefinition[]
+  cards            Card[]
+  settings         DeckSettings?
+  StudySession     StudySession[]
+
+  @@map("deck")
+}
+
+model DeckFieldDefinition {
+  id              String        @id @default(cuid())
+  deckId          String
+  fieldName       String
+  fieldType       DeckFieldType
+  isRequired      Boolean       @default(false)
+  isQuestionField Boolean       @default(false)
+  order           Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  deck       Deck        @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  cardFields CardField[]
+
+  @@unique([deckId, fieldName])
+  @@map("deck_field_definition")
+}
+
+model Card {
+  id     String @id @default(cuid())
+  deckId String
+
+  orderIndex   Int       @default(0)
+  nextReviewAt DateTime?
+  lastInterval Int?      @default(1)
+
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deck           Deck           @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  fields         CardField[]
+  studySessionId String?
+  SessionCards   SessionCards[]
+
+  @@map("card")
+}
+
+model CardField {
+  id                    String              @id @default(cuid())
+  cardId                String
+  deckFieldDefinitionId String
+  value                 String              @db.Text
+  card                  Card                @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  deckFieldDefinition   DeckFieldDefinition @relation(fields: [deckFieldDefinitionId], references: [id], onDelete: Cascade)
+
+  @@unique([cardId, deckFieldDefinitionId])
+  @@map("card_field")
+}
+
+model StudySession {
+  id          String   @id @default(cuid())
+  userId      String
+  deckId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deck        Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  expiresAt    DateTime
+  SessionCards SessionCards[]
+
+  @@map("study_session")
+}
+
+model SessionCards {
+  id           String       @id @default(cuid())
+  sessionId    String
+  cardId       String
+  cardOrder    Int          @default(0)
+  islearnt     Boolean      @default(false)
+  isReviewCard Boolean      @default(false)
+  tryCount     Int          @default(0)
+  session      StudySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  card         Card         @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([sessionId, cardId])
+  @@map("session_cards")
+}
+
+model DeckSettings {
+  id     String @id @default(cuid())
+  deckId String @unique
+
+  // Settings fields
+  showAnswerAfterQuestion Boolean @default(true)
+  cardPerDay              Int     @default(20)
+  maxReviewCards          Int     @default(100)
+  // many more to come
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  deck Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+
+  @@map("deck_settings")
+}
+
+enum DeckFieldType {
+  TEXT
+  IMAGE
+  AUDIO
 }

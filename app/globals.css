@@ -2,6 +2,70 @@
 @import "tw-animate-css";
 
 @theme {
+
+	--animate-stepper: stepper 4s ease-in-out infinite;
+
+	@keyframes stepper {
+		0% {
+			transform: rotate(0deg);
+		}
+		5.56% {
+			transform: rotate(20deg);
+		}
+		11.11% {
+			transform: rotate(40deg);
+		}
+		16.67% {
+			transform: rotate(60deg);
+		}
+		22.22% {
+			transform: rotate(80deg);
+		}
+		27.78% {
+			transform: rotate(100deg);
+		}
+		33.33% {
+			transform: rotate(120deg);
+		}
+		38.89% {
+			transform: rotate(140deg);
+		}
+		44.44% {
+			transform: rotate(160deg);
+		}
+		50% {
+			transform: rotate(180deg);
+		}
+		55.56% {
+			transform: rotate(200deg);
+		}
+		61.11% {
+			transform: rotate(220deg);
+		}
+		66.67% {
+			transform: rotate(240deg);
+		}
+		72.22% {
+			transform: rotate(260deg);
+		}
+		77.78% {
+			transform: rotate(280deg);
+		}
+		83.33% {
+			transform: rotate(300deg);
+		}
+		88.89% {
+			transform: rotate(320deg);
+		}
+		94.44% {
+			transform: rotate(340deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+
 	/* olivine */
 	--color-olivine-50: #f4f7ee;
 	--color-olivine-100: #e8eed9;
@@ -53,6 +117,18 @@
 	--color-scorpion-800: #474448;
 	--color-scorpion-900: #3f3b3f;
 	--color-scorpion-950: #2a272a;
+
+	--color-warning-50: #fff7ed;
+	--color-warning-100: #feecd6;
+	--color-warning-200: #fcd5ac;
+	--color-warning-300: #f9b778;
+	--color-warning-400: #f68f41;
+	--color-warning-500: #f3701e;
+	--color-warning-600: #e45512;
+	--color-warning-700: #bd3f11;
+	--color-warning-800: #963316;
+	--color-warning-900: #792c15;
+	--color-warning-950: #411409;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -138,7 +214,8 @@
 	--foreground: oklch(0.985 0 0);
 	--card: oklch(0.21 0.006 285.885);
 	--card-foreground: oklch(0.985 0 0);
-	--popover: oklch(0.21 0.006 285.885);
+	/* --popover: oklch(21.033% 0.00588 285.832); */
+	--popover: #191712;
 	--popover-foreground: oklch(0.985 0 0);
 	--primary: oklch(0.92 0.004 286.32);
 	--primary-foreground: oklch(0.21 0.006 285.885);

@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useActionState } from "react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -56,16 +55,6 @@ export default function PhotoUplaoderForm({ onSuccess }: { onSuccess?: () => voi
 		}
 	}, [state, form, onSuccess]);
 
-	function onSubmit() {
-		if (!files || files.length === 0) {
-			toast.error("Please select a file to upload");
-			return;
-		}
-
-		const formData = new FormData();
-		formData.append("picture", files[0]);
-		formAction(formData);
-	}
 
 	return (
 		<Form {...form}>
@@ -90,6 +79,7 @@ export default function PhotoUplaoderForm({ onSuccess }: { onSuccess?: () => voi
 				<FormField
 					control={form.control}
 					name="picture"
+					// eslint-disable-next-line
 					render={({ field }: { field: any }) => (
 						<FormItem className={""}>
 							<FormLabel className={""}>

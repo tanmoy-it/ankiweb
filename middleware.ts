@@ -20,5 +20,5 @@ export async function middleware(request: NextRequest) {
 	return NextResponse.next();
 }
 export const config = {
-	matcher: [...AuthProtectedRoutes]
+	matcher: ["/", "/profile/view", "/auth"]
 };

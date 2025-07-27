@@ -1,16 +1,12 @@
 import { NavBar } from "@/app/util-components/navbar";
 import { ThemeProvider } from "next-themes";
-import { Geist, Fira_Code } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
-import { ContextProvider } from "@/app/_lib/context-provider";
-import { PenLineIcon } from "lucide-react";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import Ico from "./util-components/ico";
 import UserLabel from "./util-components/user-label";
-import localFont from "next/font/local";
 import { Metadata } from "next";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
 	title: "Anki Web",
@@ -19,10 +15,6 @@ export const metadata: Metadata = {
 		icon: "https://cdn-icons-png.flaticon.com/512/2275/2275844.png",
 	},
 };
-
-const firaCode = localFont({
-	src: "../public/fonts/FiraCode-Regular.ttf",
-});
 
 // roboto font
 const geist = Geist({
@@ -36,11 +28,6 @@ export default async function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	const session = await auth.api.getSession({
-		headers: await headers(),
-	});
-	const user = session?.user;
-
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={`${geist.className} antialiased`}>
@@ -60,11 +47,15 @@ export default async function RootLayout({
 									</h3>
 									<NavBar />
 								</div>
-								<UserLabel />
+								<Suspense
+									fallback={
+										<div className="w-24 h-8 bg-gray-700 animate-pulse rounded-md" />
+									}
+								>
+									<UserLabel />
+								</Suspense>
 							</div>
-							<div className="p-3 px-30 w-full">
-								<ContextProvider>{children}</ContextProvider>
-							</div>
+							<div className="p-3 px-30 w-full">{children}</div>
 						</main>
 					</div>
 				</ThemeProvider>
